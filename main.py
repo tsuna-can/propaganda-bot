@@ -54,7 +54,7 @@ def slack_app():
             api_response = client.chat_postMessage(
                 channel='propaganda_channel',
                 text = ">>>" +  "【曲名】\n" + str(data.song_name) +  \
-                                "\n【コメント】\n" + str(data.comments) + \
+                                "\n【コメント】\n" + str(data.comments) + \
                                 "\n\nURL：" + str(data.url) + \
                                 "\n\n登録者：" + str(data.tourokusya) + "　布教回数：" + str(tmp_hukyo)
             )
@@ -95,9 +95,8 @@ def slack_app():
 
     return make_response("", 404)
 
-# #localで動かすとき
-# if __name__ == "__main__":
-#     app.run("localhost", 3000)
-
+#localで動かすとき
+if __name__ == "__main__":
+    app.run("localhost", 3000)
 
 
