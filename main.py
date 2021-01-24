@@ -5,8 +5,8 @@ from slack_sdk import WebClient
 from slack_sdk.signature import SignatureVerifier
 from slack_sdk.errors import SlackApiError
 from flask import Flask, request, make_response
-from sql_settings import session
-from sql_settings import SongList
+from entities.sql_settings import session
+from entities.sql_settings import SongList
 from res import modal
 
 
