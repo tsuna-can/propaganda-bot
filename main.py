@@ -81,22 +81,24 @@ def slack_app():
             comment = submitted_data["b-id1"]["id_comment"]["value"]
             movie_url = submitted_data["b-id2"]["id_url"]["value"]
             tourokusya = submitted_data["b-id3"]["id_tourokusya"]["value"]
+            num = 0
 
-            new_song = SongList(song_name=song, comments=comment, url=movie_url, tourokusya=tourokusya, num_hukyo=0)
+            new_song = SongList(song_name=song, comments=comment, url=movie_url, tourokusya=tourokusya, num_hukyo=num)
             session.add(instance=new_song)
             session.commit()
 
-            api_response = client.chat_postMessage(
-                channel='#propaganda_channel',
-                text = "登録されました"
-            )
+            #testのため
+            # api_response = client.chat_postMessage(
+            #     channel='#propaganda_channel',
+            #     text = "登録されました"
+            # )
 
             return make_response("", 200)
 
     return make_response("", 404)
 
-#localで動かすとき
-if __name__ == "__main__":
-    app.run("localhost", 3000)
+# #localで動かすとき
+# if __name__ == "__main__":
+#     app.run("localhost", 3000)
 
 
