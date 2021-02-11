@@ -5,8 +5,8 @@ from slack_sdk import WebClient
 from slack_sdk.signature import SignatureVerifier
 from slack_sdk.errors import SlackApiError
 from flask import Flask, request, make_response
-from sql_settings import session
-from sql_settings import SongList
+from entities.sql_settings import session
+from entities.sql_settings import SongList
 from res import modal
 
 
@@ -44,17 +44,17 @@ def slack_app():
             #曲の選択
             data = session.query(SongList).filter(SongList.num_hukyo==0).first()
             if not data:
-                rowCount = session.query(SongList).count()
-                tmp_id = random.randint(1, rowCount)
+                id_all = session.query(SongList.id).all()
+                tmp_id = random.choice(id_all)
                 data = session.query(SongList).filter(SongList.id == tmp_id).first()
             
             tmp_id = data.id
             tmp_hukyo = data.num_hukyo + 1
 
             api_response = client.chat_postMessage(
-                channel='propaganda_channel',
+                channel = req.get("channel_id"),
                 text = ">>>" +  "【曲名】\n" + str(data.song_name) +  \
-                                "\n【コメント】\n" + str(data.comments) + \
+                                "\n【コメント】\n" + str(data.comments) + \
                                 "\n\nURL：" + str(data.url) + \
                                 "\n\n登録者：" + str(data.tourokusya) + "　布教回数：" + str(tmp_hukyo)
             )
@@ -81,15 +81,17 @@ def slack_app():
             comment = submitted_data["b-id1"]["id_comment"]["value"]
             movie_url = submitted_data["b-id2"]["id_url"]["value"]
             tourokusya = submitted_data["b-id3"]["id_tourokusya"]["value"]
+            num = 0
 
-            new_song = SongList(song_name=song, comments=comment, url=movie_url, tourokusya=tourokusya, num_hukyo=0)
+            new_song = SongList(song_name=song, comments=comment, url=movie_url, tourokusya=tourokusya, num_hukyo=num)
             session.add(instance=new_song)
             session.commit()
 
-            api_response = client.chat_postMessage(
-                channel='#propaganda_channel',
-                text = "登録されました"
-            )
+            #testのため
+            # api_response = client.chat_postMessage(
+            #     channel='#propaganda_channel',
+            #     text = "登録されました"
+            # )
 
             return make_response("", 200)
 
@@ -98,6 +100,3 @@ def slack_app():
 # #localで動かすとき
 # if __name__ == "__main__":
 #     app.run("localhost", 3000)
-
-
-
